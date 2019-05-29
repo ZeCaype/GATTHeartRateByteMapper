@@ -15,16 +15,34 @@ public class HeartRateMeasurementBytesMapper {
   }
 
   public HeartRateMeasurementDto mapHeartRateMeasurementBytesToReadableData(int[] dataDto) {
+    
     HeartRateMeasurementDto hrm = new HeartRateMeasurementDto();
-
     HeartRateMeasurementFlagsDto flags = new HeartRateMeasurementFlagsDto();
-    setFlagsFromRawData(dataDto, flags);
-
+    flags = setFlagsFromRawData(dataDto, flags);
     hrm.setFlags(flags);
+    
+    setHeartRateValueFromRawData(dataDto, hrm);
     return hrm;
   }
 
-  private void setFlagsFromRawData(int[] dataDto, HeartRateMeasurementFlagsDto flags) {
+  private void setHeartRateValueFromRawData(int[] dataDto, HeartRateMeasurementDto hrm) {
+    int bitNumber = 1;
+    if (hrm.getFlags().isHeartRateValueFormat16Bits()) {
+
+      String raw16Bits =
+          intToBinaryString(dataDto, bitNumber) + intToBinaryString(dataDto, bitNumber + 1);
+      int heartRateValue = binaryStringToInt(raw16Bits);
+      hrm.setHeartRateMeasurementValue(heartRateValue);
+      bitNumber = bitNumber + 2;
+    } else {
+      String raw8Bits = intToBinaryString(dataDto, bitNumber);
+      int heartRateValue = binaryStringToInt(raw8Bits);
+      hrm.setHeartRateMeasurementValue(heartRateValue);
+      bitNumber++;
+    }
+  }
+
+  private HeartRateMeasurementFlagsDto setFlagsFromRawData(int[] dataDto, HeartRateMeasurementFlagsDto flags) {
     String rawFlagsBits = intToBinaryString(dataDto, 0);
     rawFlagsBits = new StringBuilder(rawFlagsBits).reverse().toString();
     int bitCount = 0;
@@ -53,6 +71,7 @@ public class HeartRateMeasurementBytesMapper {
       }
       bitCount++;
     }
+    return flags;
   }
 
   private void setSensorStatusBitsFromTwoBits(HeartRateMeasurementFlagsDto flags,
