@@ -2,18 +2,18 @@ package com.levio.cil.accuchek.dtos;
 
 public class HeartRateMeasurementDto {
 
-  private String id;
-  
+  private HeartRateMeasurementFlagsDto flags;
+
   public HeartRateMeasurementDto() {
 
   }
 
-  public String getId() {
-    return id;
+  public HeartRateMeasurementFlagsDto getFlags() {
+    return flags;
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public void setFlags(HeartRateMeasurementFlagsDto flags) {
+    this.flags = flags;
   }
-  
+
 }
