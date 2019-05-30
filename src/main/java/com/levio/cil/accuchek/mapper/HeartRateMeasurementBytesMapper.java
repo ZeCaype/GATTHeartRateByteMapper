@@ -10,6 +10,8 @@ import com.levio.cil.accuchek.dtos.HeartRateMeasurementFlagsDto;
 @Component
 public class HeartRateMeasurementBytesMapper {
 
+  private int bitNumber;
+  
   public HeartRateMeasurementBytesMapper() {
 
   }
@@ -20,12 +22,24 @@ public class HeartRateMeasurementBytesMapper {
     HeartRateMeasurementFlagsDto flags = new HeartRateMeasurementFlagsDto();
     flags = setFlagsFromRawData(dataDto, flags);
     hrm.setFlags(flags);
+    bitNumber = setHeartRateValueFromRawData(dataDto, hrm);
+    bitNumber = setEnergyExpended(dataDto, hrm);
     
-    setHeartRateValueFromRawData(dataDto, hrm);
     return hrm;
   }
 
-  private void setHeartRateValueFromRawData(int[] dataDto, HeartRateMeasurementDto hrm) {
+  private int setEnergyExpended(int[] dataDto, HeartRateMeasurementDto hrm) {
+    if (hrm.getFlags().isEnergyExpendedStatusPresent()) {
+
+      String raw16Bits = intToBinaryString(dataDto, bitNumber) + intToBinaryString(dataDto, bitNumber + 1);
+      int energyExpended = binaryStringToInt(raw16Bits);
+      hrm.setEnergyExpended(energyExpended);
+      bitNumber = bitNumber + 2;
+    }
+    return bitNumber;
+  }
+
+  private int setHeartRateValueFromRawData(int[] dataDto, HeartRateMeasurementDto hrm) {
     int bitNumber = 1;
     if (hrm.getFlags().isHeartRateValueFormat16Bits()) {
 
@@ -40,6 +54,7 @@ public class HeartRateMeasurementBytesMapper {
       hrm.setHeartRateMeasurementValue(heartRateValue);
       bitNumber++;
     }
+    return bitNumber;
   }
 
   private HeartRateMeasurementFlagsDto setFlagsFromRawData(int[] dataDto, HeartRateMeasurementFlagsDto flags) {

@@ -4,6 +4,7 @@ public class HeartRateMeasurementDto {
 
   private HeartRateMeasurementFlagsDto flags;
   private int heartRateMeasurementValue;
+  private int energyExpended;
 
   public HeartRateMeasurementDto() {
 
@@ -23,6 +24,14 @@ public class HeartRateMeasurementDto {
 
   public void setHeartRateMeasurementValue(int heartRateMeasurementValue) {
     this.heartRateMeasurementValue = heartRateMeasurementValue;
+  }
+
+  public int getEnergyExpended() {
+    return energyExpended;
+  }
+
+  public void setEnergyExpended(int energyExpended) {
+    this.energyExpended = energyExpended;
   }
 
 }
