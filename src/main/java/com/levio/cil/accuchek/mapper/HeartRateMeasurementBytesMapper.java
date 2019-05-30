@@ -11,21 +11,30 @@ import com.levio.cil.accuchek.dtos.HeartRateMeasurementFlagsDto;
 public class HeartRateMeasurementBytesMapper {
 
   private int bitNumber;
-  
+
   public HeartRateMeasurementBytesMapper() {
 
   }
 
   public HeartRateMeasurementDto mapHeartRateMeasurementBytesToReadableData(int[] dataDto) {
-    
+
     HeartRateMeasurementDto hrm = new HeartRateMeasurementDto();
     HeartRateMeasurementFlagsDto flags = new HeartRateMeasurementFlagsDto();
     flags = setFlagsFromRawData(dataDto, flags);
     hrm.setFlags(flags);
     bitNumber = setHeartRateValueFromRawData(dataDto, hrm);
     bitNumber = setEnergyExpended(dataDto, hrm);
-    
+    setRRInterval(dataDto, hrm);
     return hrm;
+  }
+
+  private void setRRInterval(int[] dataDto, HeartRateMeasurementDto hrm) {
+    if (hrm.getFlags().isRRIntervalValuePresent()) {
+
+      String raw16Bits = intToBinaryString(dataDto, bitNumber) + intToBinaryString(dataDto, bitNumber + 1);
+      int rrInterval = binaryStringToInt(raw16Bits);
+      hrm.setRrInterval(rrInterval);
+    }
   }
 
   private int setEnergyExpended(int[] dataDto, HeartRateMeasurementDto hrm) {
@@ -41,23 +50,26 @@ public class HeartRateMeasurementBytesMapper {
 
   private int setHeartRateValueFromRawData(int[] dataDto, HeartRateMeasurementDto hrm) {
     int bitNumber = 1;
+    
     if (hrm.getFlags().isHeartRateValueFormat16Bits()) {
-
-      String raw16Bits =
-          intToBinaryString(dataDto, bitNumber) + intToBinaryString(dataDto, bitNumber + 1);
+      String raw16Bits = intToBinaryString(dataDto, bitNumber) + intToBinaryString(dataDto, bitNumber + 1);
       int heartRateValue = binaryStringToInt(raw16Bits);
       hrm.setHeartRateMeasurementValue(heartRateValue);
       bitNumber = bitNumber + 2;
+      
     } else {
       String raw8Bits = intToBinaryString(dataDto, bitNumber);
       int heartRateValue = binaryStringToInt(raw8Bits);
       hrm.setHeartRateMeasurementValue(heartRateValue);
       bitNumber++;
     }
+    
     return bitNumber;
   }
 
-  private HeartRateMeasurementFlagsDto setFlagsFromRawData(int[] dataDto, HeartRateMeasurementFlagsDto flags) {
+  private HeartRateMeasurementFlagsDto setFlagsFromRawData(int[] dataDto,
+      HeartRateMeasurementFlagsDto flags) {
+    
     String rawFlagsBits = intToBinaryString(dataDto, 0);
     rawFlagsBits = new StringBuilder(rawFlagsBits).reverse().toString();
     int bitCount = 0;
