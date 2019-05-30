@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.levio.cil.accuchek.dtos.AerobicHeartRateLowerLimitDto;
+import com.levio.cil.accuchek.dtos.AerobicHeartRateUpperLimitDto;
 import com.levio.cil.accuchek.dtos.HeartRateMeasurementDto;
 import com.levio.cil.accuchek.mapper.AerobicHeartRateLowerLimitBytesMapper;
+import com.levio.cil.accuchek.mapper.AerobicHeartRateUpperLimitBytesMapper;
 import com.levio.cil.accuchek.mapper.HeartRateMeasurementBytesMapper;
 
 @RestController
@@ -16,11 +18,13 @@ public class HeartRateMetricsController {
 
   private HeartRateMeasurementBytesMapper heartRateMeasurementMapper;
   private AerobicHeartRateLowerLimitBytesMapper aerobicHeartRateLowerLimitBytesMapper;
+  private AerobicHeartRateUpperLimitBytesMapper aerobicHeartRateUpperLimitBytesMapper;
 
   @Autowired
   public HeartRateMetricsController(
       HeartRateMeasurementBytesMapper heartRateMeasurementBytesMapper,
-      AerobicHeartRateLowerLimitBytesMapper aerobicHeartRateLowerLimitBytesMapper) {
+      AerobicHeartRateLowerLimitBytesMapper aerobicHeartRateLowerLimitBytesMapper,
+      AerobicHeartRateUpperLimitBytesMapper aerobicHeartRateUpperLimitBytesMapper) {
     this.heartRateMeasurementMapper = heartRateMeasurementBytesMapper;
     this.aerobicHeartRateLowerLimitBytesMapper = aerobicHeartRateLowerLimitBytesMapper;
   }
@@ -31,8 +35,13 @@ public class HeartRateMetricsController {
   }
   
   @PostMapping (value = "/aerobicLower")
-  public AerobicHeartRateLowerLimitDto mapHeartAerobic(@RequestBody int[] dataDto) {
+  public AerobicHeartRateLowerLimitDto mapHeartAerobicLowerLimit(@RequestBody int[] dataDto) {
     return aerobicHeartRateLowerLimitBytesMapper.mapAerobicLowerLimitBytesToReadableData(dataDto);
+  }
+  
+  @PostMapping (value = "/aerobicUpper")
+  public AerobicHeartRateUpperLimitDto mapHeartAerobicUpperLimit(@RequestBody int[] dataDto) {
+    return aerobicHeartRateUpperLimitBytesMapper.mapAerobicUpperLimitBytesToReadableData(dataDto);
   }
 
 }
