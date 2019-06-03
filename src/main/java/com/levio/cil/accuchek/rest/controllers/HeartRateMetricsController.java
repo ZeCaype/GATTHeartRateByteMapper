@@ -11,6 +11,7 @@ import com.levio.cil.accuchek.dtos.AnaerobicHeartRateLowerLimitDto;
 import com.levio.cil.accuchek.dtos.AnaerobicHeartRateUpperLimitDto;
 import com.levio.cil.accuchek.dtos.FatBurnHeartRateLowerLimitDto;
 import com.levio.cil.accuchek.dtos.FatBurnHeartRateUpperLimitDto;
+import com.levio.cil.accuchek.dtos.FiveZonesHeartRateLimitsDto;
 import com.levio.cil.accuchek.dtos.HeartRateMeasurementDto;
 import com.levio.cil.accuchek.mapper.AerobicHeartRateLowerLimitBytesMapper;
 import com.levio.cil.accuchek.mapper.AerobicHeartRateUpperLimitBytesMapper;
@@ -18,6 +19,7 @@ import com.levio.cil.accuchek.mapper.AnaerobicHeartRateLowerLimitBytesMapper;
 import com.levio.cil.accuchek.mapper.AnaerobicHeartRateUpperLimitBytesMapper;
 import com.levio.cil.accuchek.mapper.FatBurnHeartRateLowerLimitBytesMapper;
 import com.levio.cil.accuchek.mapper.FatBurnHeartRateUpperLimitBytesMapper;
+import com.levio.cil.accuchek.mapper.FiveZonesHeartRateLimitsMapper;
 import com.levio.cil.accuchek.mapper.HeartRateMeasurementBytesMapper;
 
 @RestController
@@ -31,6 +33,7 @@ public class HeartRateMetricsController {
   private AnaerobicHeartRateUpperLimitBytesMapper anaerobicHeartRateUpperLimitBytesMapper;
   private FatBurnHeartRateLowerLimitBytesMapper fatBurnHeartRateLowerLimitBytesMapper;
   private FatBurnHeartRateUpperLimitBytesMapper fatBurnHeartRateUpperLimitBytesMapper;
+  private FiveZonesHeartRateLimitsMapper fiveZonesHeartRateLimitsMapper;
 
   @Autowired
   public HeartRateMetricsController(
@@ -40,7 +43,8 @@ public class HeartRateMetricsController {
       AnaerobicHeartRateLowerLimitBytesMapper anaerobicHeartRateLowerLimitBytesMapper,
       AnaerobicHeartRateUpperLimitBytesMapper anaerobicHeartRateUpperLimitBytesMapper,
       FatBurnHeartRateLowerLimitBytesMapper fatBurnHeartRateLowerLimitBytesMapper,
-      FatBurnHeartRateUpperLimitBytesMapper fatBurnHeartRateUpperLimitBytesMapper) {
+      FatBurnHeartRateUpperLimitBytesMapper fatBurnHeartRateUpperLimitBytesMapper,
+      FiveZonesHeartRateLimitsMapper fiveZonesHeartRateLimitsMapper) {
     
     this.heartRateMeasurementMapper = heartRateMeasurementBytesMapper;
     this.aerobicHeartRateLowerLimitBytesMapper = aerobicHeartRateLowerLimitBytesMapper;
@@ -49,6 +53,7 @@ public class HeartRateMetricsController {
     this.anaerobicHeartRateUpperLimitBytesMapper = anaerobicHeartRateUpperLimitBytesMapper;
     this.fatBurnHeartRateLowerLimitBytesMapper = fatBurnHeartRateLowerLimitBytesMapper;
     this.fatBurnHeartRateUpperLimitBytesMapper = fatBurnHeartRateUpperLimitBytesMapper;
+    this.fiveZonesHeartRateLimitsMapper = fiveZonesHeartRateLimitsMapper;
   }
 
   @PostMapping (value = "/heartRate")
@@ -84,6 +89,11 @@ public class HeartRateMetricsController {
   @PostMapping (value = "/fatBurnUpper")
   public FatBurnHeartRateUpperLimitDto mapHeartFatBurnUpperLimit(@RequestBody int[] dataDto) {
     return fatBurnHeartRateUpperLimitBytesMapper.mapFatBurnUpperLimitBytesToReadableData(dataDto);
+  }
+  
+  @PostMapping (value = "/fiveZones")
+  public FiveZonesHeartRateLimitsDto mapFiveZonesHeartRateLimits(@RequestBody int[] dataDto) {
+    return fiveZonesHeartRateLimitsMapper.mapFiveZonesHeartRateLimitsBytesToReadableData(dataDto);
   }
 
 }
