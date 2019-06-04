@@ -15,6 +15,7 @@ import com.levio.cil.accuchek.dtos.FiveZonesHeartRateLimitsDto;
 import com.levio.cil.accuchek.dtos.HeartRateControlPointDto;
 import com.levio.cil.accuchek.dtos.HeartRateMaxDto;
 import com.levio.cil.accuchek.dtos.HeartRateMeasurementDto;
+import com.levio.cil.accuchek.dtos.MaximumRecommendedHeartRate;
 import com.levio.cil.accuchek.mapper.AerobicHeartRateLowerLimitBytesMapper;
 import com.levio.cil.accuchek.mapper.AerobicHeartRateUpperLimitBytesMapper;
 import com.levio.cil.accuchek.mapper.AnaerobicHeartRateLowerLimitBytesMapper;
@@ -25,6 +26,7 @@ import com.levio.cil.accuchek.mapper.FiveZonesHeartRateLimitsMapper;
 import com.levio.cil.accuchek.mapper.HeartRateControlPointMapper;
 import com.levio.cil.accuchek.mapper.HeartRateMaxBytesMapper;
 import com.levio.cil.accuchek.mapper.HeartRateMeasurementBytesMapper;
+import com.levio.cil.accuchek.mapper.MaximumRecommendedHeartRateBytesMapper;
 
 @RestController
 @RequestMapping(value = "/hrm")
@@ -40,6 +42,7 @@ public class HeartRateMetricsController {
   private FiveZonesHeartRateLimitsMapper fiveZonesHeartRateLimitsMapper;
   private HeartRateControlPointMapper heartRateControlPointMapper;
   private HeartRateMaxBytesMapper heartRateMaxBytesMapper;
+  private MaximumRecommendedHeartRateBytesMapper maximumRecommendedHeartRateBytesMapper;
 
   @Autowired
   public HeartRateMetricsController(
@@ -52,7 +55,8 @@ public class HeartRateMetricsController {
       FatBurnHeartRateUpperLimitBytesMapper fatBurnHeartRateUpperLimitBytesMapper,
       FiveZonesHeartRateLimitsMapper fiveZonesHeartRateLimitsMapper,
       HeartRateControlPointMapper heartRateControlPointMapper,
-      HeartRateMaxBytesMapper heartRateMaxBytesMapper) {
+      HeartRateMaxBytesMapper heartRateMaxBytesMapper,
+      MaximumRecommendedHeartRateBytesMapper maximumRecommendedHeartRateBytesMapper) {
     
     this.heartRateMeasurementMapper = heartRateMeasurementBytesMapper;
     this.aerobicHeartRateLowerLimitBytesMapper = aerobicHeartRateLowerLimitBytesMapper;
@@ -64,6 +68,7 @@ public class HeartRateMetricsController {
     this.fiveZonesHeartRateLimitsMapper = fiveZonesHeartRateLimitsMapper;
     this.heartRateControlPointMapper = heartRateControlPointMapper;
     this.heartRateMaxBytesMapper = heartRateMaxBytesMapper;
+    this.maximumRecommendedHeartRateBytesMapper = maximumRecommendedHeartRateBytesMapper;
   }
 
   @PostMapping (value = "/heartRate")
@@ -114,6 +119,11 @@ public class HeartRateMetricsController {
   @PostMapping (value = "/heartRateMax")
   public HeartRateMaxDto mapHeartRateMax(@RequestBody int[] dataDto) {
     return heartRateMaxBytesMapper.mapArrayOfBytesToReadableObject(dataDto);
+  }
+  
+  @PostMapping (value = "/maximumRecommendedHeartRate")
+  public MaximumRecommendedHeartRate mapHeartRateMaxRecommended(@RequestBody int[] dataDto) {
+    return maximumRecommendedHeartRateBytesMapper.mapArrayOfBytesToReadableObject(dataDto);
   }
 
 }
