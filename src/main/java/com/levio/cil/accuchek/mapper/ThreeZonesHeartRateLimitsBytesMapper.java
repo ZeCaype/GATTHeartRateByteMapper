@@ -14,7 +14,6 @@ public class ThreeZonesHeartRateLimitsBytesMapper {
 
   public ThreeZonesHeartRateLimitsDto mapArrayOfBytesToReadableData(int[] dataDto) {
     ThreeZonesHeartRateLimitsDto limit = new ThreeZonesHeartRateLimitsDto();
-    String raw8Bits;
 
     setLightModerateLimit(dataDto, limit);
     setModerateHardLimit(dataDto, limit);
